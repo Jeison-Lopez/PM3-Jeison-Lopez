@@ -1,21 +1,16 @@
-// Variable example
-let greeting: string = "Hello, TypeScript!";
+import express from "express";
+import app from "./server";
+import { PORT } from "./config/envs";
+import userRoutes from "./routes/userRoutes";
+import appointmentRoutes from "./routes/appointmentRoutes";
+import morgan from "morgan";
 
-// Object example
-interface Person {
-  name: string;
-  age: number;
-}
+app.use(express.json());
+app.use(morgan("dev"));
 
-const person: Person = {
-  name: "John Doe",
-  age: 30,
-};
+app.use("/users", userRoutes);
+app.use("/appointments", appointmentRoutes);
 
-// Function example
-function greet(person: Person): string {
-  return `Hello, ${person.name}`;
-}
-
-console.log(greeting);
-console.log(greet(person));
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
