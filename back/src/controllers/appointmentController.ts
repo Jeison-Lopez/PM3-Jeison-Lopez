@@ -1,17 +1,30 @@
 import { Request, Response } from "express";
+import { AppointmentService } from "../services/turnsService";
+const appointmentService = new AppointmentService();
 
-export const getAppointments = (req: Request, res: Response) => {
-  res.send("Obtener el listado de todos los turnos de todos los usuarios");
+export const getAllAppointments = async (req: Request, res: Response) => {
+  const appointments = await appointmentService.getAllAppointments();
+  res.json(appointments);
 };
 
-export const getAppointment = (req: Request, res: Response) => {
-  res.send("Obtener el detalle de un turno específico");
+export const getAppointmentById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const appointment = await appointmentService.getAppointmentById(Number(id));
+  res.json(appointment);
 };
 
-export const scheduleAppointment = (req: Request, res: Response) => {
-  res.send("Agendar un nuevo turno");
+export const scheduleAppointment = async (req: Request, res: Response) => {
+  const { date, time, userId } = req.body;
+  const newAppointment = await appointmentService.createAppointment(
+    new Date(date),
+    time,
+    userId
+  );
+  res.json(newAppointment);
 };
 
-export const cancelAppointment = (req: Request, res: Response) => {
-  res.send('Cambiar el estatus de un turno a "cancelled"');
+export const cancelAppointment = async (req: Request, res: Response) => {
+  const { id } = req.body;
+  await appointmentService.cancelAppointment(Number(id));
+  res.json({ message: "Appointment cancelled" });
 };

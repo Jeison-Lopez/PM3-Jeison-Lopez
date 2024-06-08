@@ -1,17 +1,32 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+import { UserService } from "../services/usersService";
 
-export const getUsers = (req: Request, res: Response) => {
-  res.send('Obtener el listado de todos los usuarios');
+const userService = new UserService();
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  const users = await userService.getAllUsers();
+  res.json(users);
 };
 
-export const getUserById = (req: Request, res: Response) => {
-  res.send(`Obtener el detalle del usuario con ID: ${req.params.id}`);
+export const getUserById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = await userService.getUserById(Number(id));
+  res.json(user);
 };
 
-export const registerUser = (req: Request, res: Response) => {
-  res.send('Registro de un nuevo usuario');
+export const registerUser = async (req: Request, res: Response) => {
+  const { name, email, birthdate, nDni, username, password } = req.body;
+  const newUser = await userService.createUser(
+    name,
+    email,
+    new Date(birthdate),
+    nDni,
+    username,
+    password
+  );
+  res.json(newUser);
 };
 
-export const loginUser = (req: Request, res: Response) => {
-  res.send('Login del usuario a la aplicación');
+export const loginUser = async (req: Request, res: Response) => {
+  // Implement login logic
 };
