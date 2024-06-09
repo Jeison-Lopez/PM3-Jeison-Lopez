@@ -1,39 +1,43 @@
+// src/services/usersService.ts
 import { AppDataSource } from "../config/data-source";
-import { User } from "../entity/User";
-import { CredentialService } from "./credentialsService";
+import { User } from "../entities/User";
+import Credential from "../entities/Credential";
+import { ICreateDtio } from "../dtos/ICreateDto";
+import { userModel } from "../repositories";
+import { createCredential } from "./credentialsService";
 
-export class UserService {
-  private userRepository = AppDataSource.getRepository(User);
-  private credentialService = new CredentialService();
+export const getAllUsersService = async (): Promise<User[]> => {
+  const allUsers: User[] = await userModel.find({
+    relations: { appointments: true },
+  });
+  return allUsers;
+};
 
-  async getAllUsers(): Promise<User[]> {
-    return this.userRepository.find();
-  }
+export const getUserByIdService = async (id: number): Promise<User | null> => {
+  const user: User | null = await userModel.findOne({
+    where: { id },
+    relations: ["appointments"],
+  });
+  if (!user) throw new Error("Usuario no encontrado");
+  return user;
+};
 
-  async getUserById(id: number): Promise<User | null> {
-    return this.userRepository.findOneBy({ id });
-  }
+export const createUserService = async (createUserDto: ICreateDtio) => {
+  const newCredential: Credential = await createCredential({
+    username: createUserDto.username,
+    password: createUserDto.password,
+  });
+  const newUser: User = userModel.create(createUserDto);
+  await userModel.save(newUser);
+  newUser.credential = newCredential;
+  await userModel.save(newUser);
+  return newUser;
+};
 
-  async createUser(
-    name: string,
-    email: string,
-    birthdate: Date,
-    nDni: string,
-    username: string,
-    password: string
-  ): Promise<User> {
-    const credentialsId = await this.credentialService.createCredential(
-      username,
-      password
-    );
-
-    const user = new User();
-    user.name = name;
-    user.email = email;
-    user.birthdate = birthdate;
-    user.nDni = nDni;
-    user.credentials = { id: credentialsId } as any;
-
-    return this.userRepository.save(user);
-  }
-}
+export const findUserByCredentialId = async (credentialId: number) => {
+  const user: User | null = await userModel.findOneBy({
+    credential: { id: credentialId },
+  });
+  if (!user) throw new Error("Usuario no encontrado");
+  return user;
+};

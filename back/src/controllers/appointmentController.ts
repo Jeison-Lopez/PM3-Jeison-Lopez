@@ -1,30 +1,48 @@
+// src/controllers/appointmentController.ts
 import { Request, Response } from "express";
 import { AppointmentService } from "../services/turnsService";
-const appointmentService = new AppointmentService();
 
 export const getAllAppointments = async (req: Request, res: Response) => {
-  const appointments = await appointmentService.getAllAppointments();
-  res.json(appointments);
+  const appointments = await AppointmentService.getAllAppointments();
+  if (appointments) {
+    res.status(200).json(appointments);
+  } else {
+    res.status(404).json({ message: "Appointments not found" });
+  }
 };
 
 export const getAppointmentById = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const appointment = await appointmentService.getAppointmentById(Number(id));
-  res.json(appointment);
+  const appointment = await AppointmentService.getAppointmentById(
+    Number(req.params.id)
+  );
+  if (appointment) {
+    res.status(200).json(appointment);
+  } else {
+    res.status(404).json({ message: "Appointment not found" });
+  }
 };
 
-export const scheduleAppointment = async (req: Request, res: Response) => {
+export const createAppointment = async (req: Request, res: Response) => {
   const { date, time, userId } = req.body;
-  const newAppointment = await appointmentService.createAppointment(
-    new Date(date),
+  const appointment = await AppointmentService.createAppointment({
+    date,
     time,
-    userId
-  );
-  res.json(newAppointment);
+    userId,
+  });
+  if (appointment) {
+    res.status(201).json(appointment);
+  } else {
+    res.status(400).json({ message: "Error creating appointment" });
+  }
 };
 
 export const cancelAppointment = async (req: Request, res: Response) => {
-  const { id } = req.body;
-  await appointmentService.cancelAppointment(Number(id));
-  res.json({ message: "Appointment cancelled" });
+  const appointment = await AppointmentService.cancelAppointment(
+    Number(req.params.id)
+  );
+  if (appointment) {
+    res.status(200).json(appointment);
+  } else {
+    res.status(404).json({ message: "Appointment not found" });
+  }
 };

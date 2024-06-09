@@ -1,28 +1,28 @@
 import { AppDataSource } from "../config/data-source";
-import { Credential } from "../entity/Credential";
+import { ICreateCredentialDto } from "../dtos/ICredentialDto";
+import { IValidateCredentialDto } from "../dtos/IValidateCredentialDto";
+import Credential from "../entities/Credential";
+import { credentialModel } from "../repositories";
 
-export class CredentialService {
-  private credentialRepository = AppDataSource.getRepository(Credential);
+export const createCredential = async (
+  createCredentialDto: ICreateCredentialDto
+): Promise<Credential> => {
+  const newCredential: Credential = credentialModel.create(createCredentialDto);
+  await credentialModel.save(newCredential);
+  return newCredential;
+};
 
-  async createCredential(username: string, password: string): Promise<number> {
-    const credential = new Credential();
-    credential.username = username;
-    credential.password = password;
+export const validateCredential = async (
+  validateCredentialDto: IValidateCredentialDto
+): Promise<Credential> => {
+  const { username, password } = validateCredentialDto;
+  const foundCredential: Credential | null = await credentialModel.findOneBy({
+    username,
+  });
 
-    const savedCredential = await this.credentialRepository.save(credential);
-    return savedCredential.id;
-  }
+  if (!foundCredential) throw new Error("Credenciales incorrectas");
+  if (password !== foundCredential?.password)
+    throw new Error("Credenciales incorrectas");
 
-  async validateCredential(
-    username: string,
-    password: string
-  ): Promise<number | null> {
-    const credential = await this.credentialRepository.findOneBy({ username });
-
-    if (credential && credential.password === password) {
-      return credential.id;
-    }
-
-    return null;
-  }
-}
+  return foundCredential;
+};

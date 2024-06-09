@@ -1,10 +1,21 @@
-import { Router } from "express";
-import userRoutes from "./userRoutes";
-import appointmentRoutes from "./appointmentRoutes";
+// src/index.ts
+import express from "express";
+import { AppDataSource } from "../config/data-source";
+import userRoutes from "../routes/userRoutes";
+import appointmentRoutes from "../routes/appointmentRoutes";
+import { PORT } from "../config/envs";
 
-const router = Router();
+const app = express();
 
-router.use("/users", userRoutes);
-router.use("/appointments", appointmentRoutes);
+app.use(express.json());
 
-export default router;
+app.use("/user", userRoutes);
+app.use("/turns", appointmentRoutes);
+
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => console.log(error));

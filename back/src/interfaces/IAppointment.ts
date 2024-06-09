@@ -1,7 +1,11 @@
+export enum AppointmentStatus {
+  ACTIVE = "active",
+  CANCELLED = "cancelled",
+}
 export interface Appointment {
   id: number;
-  date: Date;
+  date: string;
   time: string;
   userId: number;
-  status: "active" | "cancelled";
+  status: AppointmentStatus;
 }

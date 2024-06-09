@@ -1,39 +1,51 @@
+// src/services/appointmentsService.ts
 import { AppDataSource } from "../config/data-source";
-import { Appointment } from "../entity/Appointment";
+import { Appointment } from "../entities/Appointment";
+import { User } from "../entities/User";
 
-export class AppointmentService {
-  private appointmentRepository = AppDataSource.getRepository(Appointment);
+export const AppointmentService = {
+  getAllAppointments: async () => {
+    return await AppDataSource.getRepository(Appointment).find({
+      relations: ["user"],
+    });
+  },
 
-  async getAllAppointments(): Promise<Appointment[]> {
-    return this.appointmentRepository.find({ relations: ["user"] });
-  }
-
-  async getAppointmentById(id: number): Promise<Appointment | null> {
-    return this.appointmentRepository.findOne({
+  getAppointmentById: async (id: number) => {
+    return await AppDataSource.getRepository(Appointment).findOne({
       where: { id },
       relations: ["user"],
     });
-  }
+  },
 
-  async createAppointment(
-    date: Date,
-    time: string,
-    userId: number
-  ): Promise<Appointment> {
-    const appointment = new Appointment();
-    appointment.date = date;
-    appointment.time = time;
-    appointment.user = { id: userId } as any;
-    appointment.status = "active";
+  createAppointment: async (data: {
+    date: string;
+    time: string;
+    userId: number;
+  }) => {
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { id: data.userId },
+    });
 
-    return this.appointmentRepository.save(appointment);
-  }
+    if (user) {
+      const appointment = new Appointment();
+      appointment.date = data.date;
+      appointment.time = data.time;
+      appointment.status = "scheduled";
+      appointment.user = user;
 
-  async cancelAppointment(id: number): Promise<void> {
-    const appointment = await this.getAppointmentById(id);
+      return await AppDataSource.getRepository(Appointment).save(appointment);
+    }
+    return null;
+  },
+
+  cancelAppointment: async (id: number) => {
+    const appointment = await AppDataSource.getRepository(Appointment).findOne({
+      where: { id },
+    });
     if (appointment) {
       appointment.status = "cancelled";
-      await this.appointmentRepository.save(appointment);
+      return await AppDataSource.getRepository(Appointment).save(appointment);
     }
-  }
-}
+    return null;
+  },
+};
