@@ -31,7 +31,7 @@ export const createAppointmentService = async (data: {
     const appointment = new Appointment();
     appointment.date = data.date;
     appointment.time = data.time;
-    appointment.status = "scheduled";
+    appointment.status = "active";
     appointment.user = user;
 
     return await AppDataSource.getRepository(Appointment).save(appointment);

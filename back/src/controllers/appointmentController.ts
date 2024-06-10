@@ -8,11 +8,15 @@ import {
 
 // Controlador para obtener todos los turnos
 export const getAllAppointments = async (req: Request, res: Response) => {
-  const appointments = await getAllAppointmentsService();
-  if (appointments) {
-    res.status(200).json(appointments);
-  } else {
-    res.status(404).json({ message: "Appointments not found" });
+  try {
+    const appointments = await getAllAppointmentsService();
+    if (appointments.length > 0) {
+      res.status(200).json(appointments);
+    } else {
+      res.status(404).json({ message: "Appointments not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

@@ -81,7 +81,7 @@ export const login = async (
       throw new Error("Credenciales incorrectas");
     }
   } catch (error: any) {
-    res.status(404).json({
+    res.status(400).json({
       message: error.message,
     });
   }
