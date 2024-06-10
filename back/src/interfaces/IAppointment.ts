@@ -2,7 +2,8 @@ export enum AppointmentStatus {
   ACTIVE = "active",
   CANCELLED = "cancelled",
 }
-export interface Appointment {
+
+export interface IAppointment {
   id: number;
   date: string;
   time: string;

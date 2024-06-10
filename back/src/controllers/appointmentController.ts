@@ -1,9 +1,14 @@
-// src/controllers/appointmentController.ts
 import { Request, Response } from "express";
-import { AppointmentService } from "../services/turnsService";
+import {
+  getAllAppointmentsService,
+  getAppointmentByIdService,
+  createAppointmentService,
+  cancelAppointmentService,
+} from "../services/appointmentsService";
 
+// Controlador para obtener todos los turnos
 export const getAllAppointments = async (req: Request, res: Response) => {
-  const appointments = await AppointmentService.getAllAppointments();
+  const appointments = await getAllAppointmentsService();
   if (appointments) {
     res.status(200).json(appointments);
   } else {
@@ -11,10 +16,9 @@ export const getAllAppointments = async (req: Request, res: Response) => {
   }
 };
 
+// Controlador para obtener un turno por su ID
 export const getAppointmentById = async (req: Request, res: Response) => {
-  const appointment = await AppointmentService.getAppointmentById(
-    Number(req.params.id)
-  );
+  const appointment = await getAppointmentByIdService(Number(req.params.id));
   if (appointment) {
     res.status(200).json(appointment);
   } else {
@@ -22,9 +26,10 @@ export const getAppointmentById = async (req: Request, res: Response) => {
   }
 };
 
+// Controlador para crear un nuevo turno
 export const createAppointment = async (req: Request, res: Response) => {
   const { date, time, userId } = req.body;
-  const appointment = await AppointmentService.createAppointment({
+  const appointment = await createAppointmentService({
     date,
     time,
     userId,
@@ -36,12 +41,11 @@ export const createAppointment = async (req: Request, res: Response) => {
   }
 };
 
+// Controlador para cancelar un turno por su ID
 export const cancelAppointment = async (req: Request, res: Response) => {
-  const appointment = await AppointmentService.cancelAppointment(
-    Number(req.params.id)
-  );
+  const appointment = await cancelAppointmentService(Number(req.params.id));
   if (appointment) {
-    res.status(200).json(appointment);
+    res.status(200).json({ message: "Cancelado" });
   } else {
     res.status(404).json({ message: "Appointment not found" });
   }

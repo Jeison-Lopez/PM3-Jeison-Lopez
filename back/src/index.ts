@@ -1,22 +1,14 @@
-import "reflect-metadata";
-import express from "express";
-import cors from "cors";
-import morgan from "morgan";
-import { AppDataSource } from "./config/data-source";
+import app from "./server";
 import userRoutes from "./routes/userRoutes";
 import appointmentRoutes from "./routes/appointmentRoutes";
-import { DB_PORT, PORT } from "./config/envs";
-import app from "./server";
-app.use(cors());
-app.use(express.json());
-app.use(morgan("dev"));
+import { AppDataSource } from "./config/data-source";
+import { PORT } from "./config/envs";
 
 app.use("/users", userRoutes);
 app.use("/appointments", appointmentRoutes);
 
 AppDataSource.initialize()
   .then(() => {
-    console.log(`Data Base is running on port ${DB_PORT}`);
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

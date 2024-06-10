@@ -1,4 +1,4 @@
-export interface ICreateDtio {
+export interface UserDto {
   name: string;
   email: string;
   birthdate: string;

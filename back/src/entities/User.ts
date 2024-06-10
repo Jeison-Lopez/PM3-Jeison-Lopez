@@ -3,12 +3,11 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  ManyToOne,
   OneToOne,
   JoinColumn,
 } from "typeorm";
 import { Appointment } from "./Appointment";
-import Credential from "./Credential";
+import { Credential } from "./Credential";
 
 @Entity({ name: "users" })
 export class User {

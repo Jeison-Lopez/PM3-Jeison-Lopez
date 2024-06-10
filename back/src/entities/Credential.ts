@@ -1,8 +1,8 @@
-// src/entity/Credential.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { User } from "./User";
 
 @Entity({ name: "credentials" })
-class Credential {
+export class Credential {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -11,5 +11,7 @@ class Credential {
 
   @Column()
   password!: string;
+
+  @OneToMany(() => User, (user) => user.credential)
+  users!: User[];
 }
-export default Credential;

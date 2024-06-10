@@ -1,11 +1,10 @@
-// src/services/usersService.ts
-import { AppDataSource } from "../config/data-source";
 import { User } from "../entities/User";
-import Credential from "../entities/Credential";
-import { ICreateDtio } from "../dtos/ICreateDto";
+import { Credential } from "../entities/Credential";
+import { UserDto } from "../dtos/user.dto";
 import { userModel } from "../repositories";
 import { createCredential } from "./credentialsService";
 
+// Servicio para obtener todos los usuarios
 export const getAllUsersService = async (): Promise<User[]> => {
   const allUsers: User[] = await userModel.find({
     relations: { appointments: true },
@@ -13,6 +12,7 @@ export const getAllUsersService = async (): Promise<User[]> => {
   return allUsers;
 };
 
+// Servicio para obtener un usuario por su ID
 export const getUserByIdService = async (id: number): Promise<User | null> => {
   const user: User | null = await userModel.findOne({
     where: { id },
@@ -22,7 +22,8 @@ export const getUserByIdService = async (id: number): Promise<User | null> => {
   return user;
 };
 
-export const createUserService = async (createUserDto: ICreateDtio) => {
+// Servicio para crear un nuevo usuario
+export const registerUserService = async (createUserDto: UserDto) => {
   const newCredential: Credential = await createCredential({
     username: createUserDto.username,
     password: createUserDto.password,
@@ -34,7 +35,13 @@ export const createUserService = async (createUserDto: ICreateDtio) => {
   return newUser;
 };
 
-export const findUserByCredentialId = async (credentialId: number) => {
+export const loginUserByCredentialId = async (
+  credentialId: number
+): Promise<User | null> => {
+  if (isNaN(credentialId)) {
+    throw new Error("ID de credencial inválido");
+  }
+
   const user: User | null = await userModel.findOneBy({
     credential: { id: credentialId },
   });

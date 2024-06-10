@@ -1,4 +1,4 @@
-export interface ICreateCredentialDto {
+export interface ValidateDto {
   username: string;
   password: string;
 }
