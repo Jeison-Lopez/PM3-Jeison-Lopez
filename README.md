@@ -124,3 +124,4 @@ Las user stories ayudan a clarificar las funcionalidades desde la perspectiva de
 - `fecha`: Date
 - `hora`: String (formato 24 horas, ej. "10:00")
 - `estado`: String (activo/cancelado)
+  ...
