@@ -1,11 +1,11 @@
 // src/App.jsx
 import React from "react";
-import Home from "./views/Home";
+import MisTurnos from "./views/MisTurnos";
 
 const App = () => {
   return (
     <div>
-      <Home />
+      <MisTurnos />
     </div>
   );
 };
