@@ -5,7 +5,7 @@ import { AppDataSource } from "./config/data-source";
 import { PORT } from "./config/envs";
 
 app.use("/users", userRoutes);
-app.use("/appointments", appointmentRoutes);
+app.use("/turns", appointmentRoutes);
 
 AppDataSource.initialize()
   .then(() => {
