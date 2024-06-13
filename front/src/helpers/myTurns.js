@@ -1,4 +1,3 @@
-// src/helpers/myTurns.js
 const turnos = [
   {
     id: 1,
@@ -13,7 +12,6 @@ const turnos = [
       nDni: "1041350589",
     },
   },
-  // Agregar más objetos de turno según sea necesario
 ];
 
 export default turnos;

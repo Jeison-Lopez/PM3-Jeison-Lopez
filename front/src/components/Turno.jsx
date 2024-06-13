@@ -1,7 +1,6 @@
-// src/components/Turno.jsx
-import React from "react";
+import PropTypes from "prop-types";
 
-const Turno = ({ turno }) => {
+const TurnoItem = ({ turno }) => {
   return (
     <div>
       <p>ID: {turno.id}</p>
@@ -20,4 +19,20 @@ const Turno = ({ turno }) => {
   );
 };
 
-export default Turno;
+TurnoItem.propTypes = {
+  turno: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      birthdate: PropTypes.string.isRequired,
+      nDni: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
+
+export default TurnoItem;

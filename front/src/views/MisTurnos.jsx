@@ -1,29 +1,50 @@
-import React, { useState, useEffect } from "react";
+// views/MisTurnos.jsx
+
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import Turno from "../components/Turno";
+import TurnoItem from "../components/Turno";
+import { setUserAppointments } from "../actions/appointmentsActions";
 
 const MisTurnos = () => {
-  const [turnos, setTurnos] = useState([]);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user); // Asegúrate de que state.user.user obtenga correctamente el usuario
+  const userAppointments = useSelector(
+    (state) => state.appointments.userAppointments
+  );
 
   useEffect(() => {
-    const fetchTurnos = async () => {
+    const fetchUserAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/turns");
-        setTurnos(response.data); // Asigna los turnos recibidos del backend al estado
+        if (!user) {
+          console.error("Usuario no autenticado");
+          return;
+        }
+
+        const response = await axios.get(
+          `http://localhost:3000/turns?userId=${user.id}`
+        );
+        dispatch(setUserAppointments(response.data));
       } catch (error) {
-        console.error("Error fetching turns:", error);
+        console.error("Error fetching user appointments:", error);
       }
     };
 
-    fetchTurnos();
-  }, []); // La dependencia vacía [] indica que useEffect se ejecuta solo una vez al montarse el componente
+    if (user) {
+      fetchUserAppointments();
+    }
+  }, [dispatch, user]);
 
   return (
     <div>
       <h1>Mis Turnos</h1>
-      {turnos.map((turno) => (
-        <Turno key={turno.id} turno={turno} />
-      ))}
+      {userAppointments && userAppointments.length > 0 ? (
+        userAppointments.map((turno) => (
+          <TurnoItem key={turno.id} turno={turno} />
+        ))
+      ) : (
+        <p>Aún no tienes turnos agendados.</p>
+      )}
     </div>
   );
 };
