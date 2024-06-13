@@ -1,11 +1,13 @@
-// src/App.jsx
 import React from "react";
-import MisTurnos from "./views/MisTurnos";
+import Register from "./views/Register";
+import Login from "./views/Login";
 
 const App = () => {
   return (
     <div>
-      <MisTurnos />
+      <h1>Aplicación de Registro y Login</h1>
+      <Register />
+      <Login />
     </div>
   );
 };
