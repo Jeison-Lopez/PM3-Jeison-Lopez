@@ -1,27 +1,23 @@
 // src/components/Navbar.jsx
 import React from "react";
-import styles from "./Navbar.module.css";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <nav className={styles.navbar}>
-      <ul className={styles.navlist}>
+    <nav>
+      <ul>
         <li>
-          <a href="/" className={styles.navitem}>
-            Home
-          </a>
+          <Link to="/">Home</Link>
         </li>
         <li>
-          <a href="/login" className={styles.navitem}>
-            Login
-          </a>
+          <Link to="/mis-turnos">Mis Turnos</Link>
         </li>
         <li>
-          <a href="/register" className={styles.navitem}>
-            Register
-          </a>
+          <Link to="/register">Register</Link>
         </li>
-        {/* Puedes añadir más opciones de navegación según necesites */}
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
       </ul>
     </nav>
   );
