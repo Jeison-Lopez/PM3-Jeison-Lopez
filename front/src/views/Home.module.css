@@ -1,0 +1,12 @@
+/* src/views/Home.module.css */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  color: #333;
+  font-size: 2rem;
+  text-align: center;
+}

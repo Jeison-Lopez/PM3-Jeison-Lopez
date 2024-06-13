@@ -1,0 +1,21 @@
+/* src/components/Navbar.module.css */
+.navbar {
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.navlist {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+}
+
+.navitem {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.navitem:hover {
+  text-decoration: underline;
+}
